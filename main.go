@@ -42,44 +42,55 @@ The commands are:
 		os.Exit(1)
 	}
 
-	c, err := beanstalk.Dial("tcp", addr)
-	if err != nil {
-		log.Errorf("error dial beanstalkd %v\n", err)
-		return
-	}
-
-	if err := runCommand(c, cmd, cmdArgs); err != nil {
+	if err := runCommand(addr, cmd, cmdArgs); err != nil {
 		log.Errorf("run command, err = %v", err)
 		os.Exit(1)
 	}
 }
 
-func runCommand(c *beanstalk.Conn, cmd string, args []string) (err error) {
-	argv := append([]string{cmd}, args...)
-	switch cmd {
-	case "put":
-		return cmdPut(c, argv)
-	case "reserve":
-		return cmdReserve(c, argv)
-	default:
-		return fmt.Errorf("%s is not a valid command", cmd)
+func newConn(addr string) (*beanstalk.Conn, error) {
+	c, err := beanstalk.Dial("tcp", addr)
+	if err != nil {
+		log.Errorf("error dial beanstalkd %v", err)
+		return nil, err
 	}
+
+	return c, nil
 }
 
-func cmdReserve(c *beanstalk.Conn, argv []string) error {
-	usage := `usage: reserve [--timeout=<timeout>] [--tubes=<tubes>] [--no-delete]
+type cmdFunc func(string, []string) error
+type cmdFuncMap map[string]cmdFunc
+
+var cmdFuncs = cmdFuncMap{
+	"put":     cmdPut,
+	"reserve": cmdReserve,
+}
+
+func runCommand(addr string, cmd string, args []string) (err error) {
+	f, ok := cmdFuncs[cmd]
+	if !ok {
+		return fmt.Errorf("%s is not a valid command", cmd)
+	}
+
+	argv := append([]string{cmd}, args...)
+	return f(addr, argv)
+}
+
+func cmdReserve(addr string, argv []string) error {
+	usage := `usage: reserve [--timeout=<timeout>] [--tubes=<tubes>] [--no-delete] [--string]
 options:
-	-h, --help
-	--timeout=<timeout>   reservation timeout in seconds [default: 0]
-	--tubes=<tubes>       csv of tubes [default: default]
+    -h, --help
+    --timeout=<timeout>   reservation timeout in seconds [default: 0]
+    --tubes=<tubes>       csv of tubes [default: default]
     --no-delete           do not delete (aka. ACK) the job once reserved [default: false]
+	--string              display job's body content as a string [default: false]  
 
 example:
-	watch for reservations on default tube (topic)
-	reserve
-	
+    watch for reservations on default tube (topic)
+    reserve
+
     watch for reservations on tubes foo & bar with timeout of 10 seconds
-	reserve --timeout 10 --tubes=foo,bar`
+    reserve --timeout 10 --tubes=foo,bar`
 
 	opts, err := docopt.ParseArgs(usage, argv[1:], "version")
 	if err != nil {
@@ -103,6 +114,16 @@ example:
 		return err
 	}
 
+	displayStr, err := opts.Bool("--string")
+	if err != nil {
+		return err
+	}
+
+	c, err := newConn(addr)
+	if err != nil {
+		return err
+	}
+
 	tubeNames := strings.Split(tubes, ",")
 	log.Infof("c.reserve() timeout=%v sec tubes=%v no-delete=%v", timeout, tubeNames, noDel)
 	ts := beanstalk.NewTubeSet(c, tubeNames...)
@@ -113,6 +134,9 @@ example:
 	}
 
 	log.Infof("reserved job id=%v body=%v", id, len(body))
+	if displayStr {
+		log.Infof("body = %v", string(body))
+	}
 
 	if !noDel {
 		if err := c.Delete(id); err != nil {
@@ -126,19 +150,19 @@ example:
 	return nil
 }
 
-func cmdPut(c *beanstalk.Conn, argv []string) error {
+func cmdPut(addr string, argv []string) error {
 	usage := `usage: put [--body=<body>] [--pri=<pri>] [--ttr=<ttr>] [--delay=<delay>] [--tube=<tube>]
 options:
-	-h, --help
-	--body=<body>     body [default: hello]
-	--pri=<pri>       job priority [default: 1]
-	--ttr=<ttr>       ttr in seconds [default: 10]
-	--delay=<delay    job delay in seconds [default: 0]
+    -h, --help
+    --body=<body>     body [default: hello]
+    --pri=<pri>       job priority [default: 1]
+    --ttr=<ttr>       ttr in seconds [default: 10]
+    --delay=<delay    job delay in seconds [default: 0]
     --tube=<tube>     tube (topic) to put the job [default: default]
 
 example:
-	put --body "hello world"
-	put --body "hello world" --tube foo`
+    put --body "hello world"
+    put --body "hello world" --tube foo`
 
 	opts, err := docopt.ParseArgs(usage, argv[1:], "version")
 	if err != nil {
@@ -149,11 +173,6 @@ example:
 	tube, err := opts.String("--tube")
 	if err != nil {
 		return err
-	}
-
-	var t *beanstalk.Tube = nil
-	if tube != "default" {
-		t = &beanstalk.Tube{Conn: c, Name: tube}
 	}
 
 	log.Debugf("args:...%v", opts)
@@ -180,6 +199,16 @@ example:
 	log.Infof("c.Put() body=%v, pri=%v, delay=%v sec, ttr=%v sec tube=%v",
 		body, pri, ttr, delay, tube)
 
+	c, err := newConn(addr)
+	if err != nil {
+		return err
+	}
+
+	var t *beanstalk.Tube = nil
+	if tube != "default" {
+		t = &beanstalk.Tube{Conn: c, Name: tube}
+	}
+
 	var id uint64
 	if t == nil {
 		// t == nil; indicates no specific tube is used the put call is made to the default tube (implicitly)
@@ -189,7 +218,7 @@ example:
 	}
 
 	if err != nil {
-		log.Errorf("Put(...), error %v\n", err)
+		log.Errorf("Put(...), error %v", err)
 		return err
 	}
 
