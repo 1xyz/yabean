@@ -157,7 +157,7 @@ options:
     --body=<body>     body [default: hello]
     --pri=<pri>       job priority [default: 1]
     --ttr=<ttr>       ttr in seconds [default: 10]
-    --delay=<delay    job delay in seconds [default: 0]
+    --delay=<delay>   job delay in seconds [default: 0]
     --tube=<tube>     tube (topic) to put the job [default: default]
 
 example:
