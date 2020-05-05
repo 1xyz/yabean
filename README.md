@@ -1,2 +1,2 @@
 # beanstalk-cli
-A  CLI for beanstalk work q queue  
+A  CLI for beanstalk work queue  
