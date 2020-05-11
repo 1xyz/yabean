@@ -15,14 +15,16 @@ func init() {
 }
 
 func main() {
-	usage := `usage: bs-client [--version] [--addr=<addr>] <command> [<args>...]
+	usage := `usage: beanstalk-cli [--version] [--addr=<addr>] <command> [<args>...]
 options:
    --addr=<addr>  Beanstalkd Address [default: :11300].
    -h, --help
 The commands are:
    put        Put a job into a beanstalkd tube.
    reserve    Reserve a job from one or more tubes.
+   stats      Retrieve serve statistics.	
    stats-job  Retrieve statistics for a specific job.
+   stats-tube Retrieve statistics for a specific tube.
 `
 	parser := &docopt.Parser{OptionsFirst: true}
 	args, err := parser.ParseArgs(usage, nil, "bs-demo-client version 0.1")
