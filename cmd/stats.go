@@ -14,7 +14,7 @@ options:
     --job-id=<id>   Job identifier 
 
 example:
-    retrieve statistics for a job with identifier 100
+    Retrieve statistics for a job with identifier 100
     stats-job --job-id 100`
 
 	opts, err := docopt.ParseArgs(usage, argv[1:], "version")
