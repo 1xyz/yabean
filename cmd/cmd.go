@@ -22,6 +22,7 @@ type cmdFuncMap map[string]cmdFunc
 var cmdFuncs = cmdFuncMap{
 	"put":        CmdPut,
 	"reserve":    CmdReserve,
+	"stats":      CmdStats,
 	"stats-job":  CmdStatsJob,
 	"stats-tube": CmdStatsTube,
 }
