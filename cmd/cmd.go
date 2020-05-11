@@ -20,9 +20,10 @@ type cmdFunc func(string, []string) error
 type cmdFuncMap map[string]cmdFunc
 
 var cmdFuncs = cmdFuncMap{
-	"put":       CmdPut,
-	"reserve":   CmdReserve,
-	"stats-job": CmdStatsJob,
+	"put":        CmdPut,
+	"reserve":    CmdReserve,
+	"stats-job":  CmdStatsJob,
+	"stats-tube": CmdStatsTube,
 }
 
 func RunCommand(addr string, cmd string, args []string) (err error) {
