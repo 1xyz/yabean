@@ -22,7 +22,7 @@ Explore individual commands
 
 For example:
 ```
-./bscli put --help
+./beanstalk-cli put --help
 usage: put [--body=<body>] [--pri=<pri>] [--ttr=<ttr>] [--delay=<delay>] [--tube=<tube>]
 options:
     -h, --help
