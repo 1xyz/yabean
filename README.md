@@ -7,7 +7,7 @@ Pre-built binaries can be obtained from the [releases page](https://github.com/1
 # Example Usage
 
 ```
-./bscli --help
+./beanstalk-cli --help
 usage: bs-client [--version] [--addr=<addr>] <command> [<args>...]
 options:
    --addr=<addr>  Beanstalkd Address [default: :11300].
@@ -15,6 +15,7 @@ options:
 The commands are:
    put        Put a job into a beanstalkd tube.
    reserve    Reserve a job from one or more tubes.
+   ...
 
 ```
 
@@ -43,7 +44,16 @@ example:
 Refer the makefile
 
 ```
-$ make
+  $  make
+ target         ⾖ Description.
+ -----------------------------------------------------------------
+ build          generate a local build ⇨ bin/beanstalk-cli
+ clean          clean up bin/ & go test cache
+ fmt            format go code files using go fmt
+ release/darwin generate a darwin target build
+ release/linux  generate a linux target build
+ tidy           clean up go module file
+ ------------------------------------------------------------------
 ``` 
 
 
