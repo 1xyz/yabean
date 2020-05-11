@@ -15,7 +15,7 @@ options:
 The commands are:
    put        Put a job into a beanstalkd tube.
    reserve    Reserve a job from one or more tubes.
-   ...
+   stats-job  Retrieve statistics for a specific job.
 
 ```
 
