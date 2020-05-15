@@ -1,4 +1,4 @@
-module github.com/1xyz/beanstalk-cli
+module github.com/1xyz/yabean
 
 go 1.13
 
