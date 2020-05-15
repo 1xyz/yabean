@@ -4,7 +4,7 @@ Yet another CLI for beanstalk work queue, built atop [go-beanstalkd](https://git
 
 The CLI attempts to exercise most of the functionality.
 
-Pre-built binaries can be obtained from the [releases page](https://github.com/1xyz/beanstalk-cli/releases)
+Pre-built static binaries can be obtained from the [releases page](https://github.com/1xyz/beanstalk-cli/releases)
 
 
 # Example Usage
