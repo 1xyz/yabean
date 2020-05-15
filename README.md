@@ -2,6 +2,8 @@
 
 Yet another CLI for beanstalk work queue, built atop [go-beanstalkd](https://github.com/beanstalkd/go-beanstalk) 
 
+The CLI attempts to exercise most of the functionality.
+
 Pre-built binaries can be obtained from the [releases page](https://github.com/1xyz/beanstalk-cli/releases)
 
 
@@ -43,6 +45,47 @@ options:
 example:
     put --body "hello world"
     put --body "hello world" --tube foo
+```
+
+and..
+
+```
+beanstalk-cli reserve --help
+usage: reserve [--del|--bury|--release] [options]
+options:
+    -h, --help
+    --timeout=<seconds>   reservation timeout in seconds [default: 0]
+    --tubes=<tubes>       csv of tubes [default: default]
+    --string              display job's body content as a string [default: false]
+  Post reserve actions:
+    --bury                bury the job once a job is reserved
+    --del                 delete the job (similar to ACK) once a job is reserved
+    --release             release the job (similar to NACK) once a job is reserved
+  Post reserve action options:
+    --pri=<int>           new priority if the job is buried or released [default: 1024]
+    --delay=<seconds>     new delay if the job is release [default: 10]
+  Other reserve options:
+    --touch=<int>         touch (aka renew TTR) the reserved job n times prior to either burying,
+                          deleting, releasing or timeout [default: 0]
+
+example:
+    watch for reservations on default tube (topic)
+    reserve
+
+    watch for reservations on tubes foo & bar with timeout of 10 seconds
+    reserve --timeout 10 --tubes=foo,bar
+
+    delete the job after it is reserved frpm the default tube
+    reserve --del
+
+    bury the job with a priority 123 after it is reserved from the foo tube
+    reserve --tubes=foo --bury --priority 123
+
+    release the job immediately after it is reserved from the bar tube
+    reserve --tube=bar --release
+
+    touch a job 5 times and bury it after it is reserved from the foobar tube
+    reserve --tube=foobar --touch 5 --bury
 ```
 
 
