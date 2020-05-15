@@ -2,7 +2,7 @@
 package main
 
 import (
-	command "github.com/1xyz/beanstalk-cli/cmd"
+	command "github.com/1xyz/yabean/cmd"
 	"github.com/docopt/docopt-go"
 	log "github.com/sirupsen/logrus"
 	"os"
@@ -15,7 +15,7 @@ func init() {
 }
 
 func main() {
-	usage := `usage: beanstalk-cli [--version] [--addr=<addr>] <command> [<args>...]
+	usage := `usage: yabean [--version] [--addr=<addr>] <command> [<args>...]
 options:
    --addr=<addr>  Beanstalkd Address [default: :11300].
    -h, --help

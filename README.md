@@ -1,17 +1,17 @@
-# beanstalk-cli
+# yabean
 
 Yet another CLI for beanstalk work queue, built atop [go-beanstalkd](https://github.com/beanstalkd/go-beanstalk) 
 
 The CLI attempts to exercise most of the functionality.
 
-Pre-built static binaries can be obtained from the [releases page](https://github.com/1xyz/beanstalk-cli/releases)
+Pre-built static binaries can be obtained from the [releases page](https://github.com/1xyz/yabean/releases)
 
 
 # Example Usage
 
 ```
-./beanstalk-cli --help
-usage: beanstalk-cli [--version] [--addr=<addr>] <command> [<args>...]
+./yabean --help
+usage: yabean [--version] [--addr=<addr>] <command> [<args>...]
 options:
    --addr=<addr>  Beanstalkd Address [default: :11300].
    -h, --help
@@ -32,7 +32,7 @@ Explore individual commands
 
 For example:
 ```
-./beanstalk-cli put --help
+./yabean put --help
 usage: put [--body=<body>] [--pri=<pri>] [--ttr=<ttr>] [--delay=<delay>] [--tube=<tube>]
 options:
     -h, --help
@@ -50,7 +50,7 @@ example:
 and..
 
 ```
-beanstalk-cli reserve --help
+yabean reserve --help
 usage: reserve [--del|--bury|--release] [options]
 options:
     -h, --help
@@ -97,7 +97,7 @@ Refer the makefile
   $  make
  target         ⾖ Description.
  -----------------------------------------------------------------
- build          generate a local build ⇨ bin/beanstalk-cli
+ build          generate a local build ⇨ bin/yabean
  clean          clean up bin/ & go test cache
  fmt            format go code files using go fmt
  release/darwin generate a darwin target build
