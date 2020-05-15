@@ -1,8 +1,8 @@
 # yabean
 
-Yet another CLI for beanstalk work queue, built atop [go-beanstalkd](https://github.com/beanstalkd/go-beanstalk) 
+yabean is Yet Another BEANstalkd cli  for the beanstalk work queue, built atop [go-beanstalkd](https://github.com/beanstalkd/go-beanstalk) 
 
-The CLI attempts to exercise most of the functionality.
+The CLI attempts to exercise most of the functionality, kind of a swiss army knife to work with the queue.
 
 Pre-built static binaries can be obtained from the [releases page](https://github.com/1xyz/yabean/releases)
 
