@@ -20,6 +20,11 @@ options:
    --addr=<addr>  Beanstalkd Address [default: :11300].
    -h, --help
 The commands are:
+   del        Delete a specific job.
+   kick       Kick a buried job (Note: see reserve command to bury a job).
+   list       List tubes.
+   peek       Peek at a specific job.
+   peek-tube  Peek into a specific tube.
    put        Put a job into a beanstalkd tube.
    reserve    Reserve a job from one or more tubes.
    stats      Retrieve serve statistics.	
@@ -27,7 +32,7 @@ The commands are:
    stats-tube Retrieve statistics for a specific tube.
 `
 	parser := &docopt.Parser{OptionsFirst: true}
-	args, err := parser.ParseArgs(usage, nil, "bs-demo-client version 0.1")
+	args, err := parser.ParseArgs(usage, nil, "beanstalk cli version 0.1")
 	if err != nil {
 		log.Errorf("err = %v", err)
 		os.Exit(1)

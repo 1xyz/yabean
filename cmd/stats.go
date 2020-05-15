@@ -10,14 +10,13 @@ import (
 )
 
 func CmdStatsJob(addr string, argv []string) error {
-	usage := `usage: stats-job [--job-id=<id>]
+	usage := `usage: stats-job <job-id>
 options:
     -h, --help
-    --job-id=<id>   Job identifier 
 
 example:
     Retrieve statistics for a job with identifier 100
-    stats-job --job-id 100`
+    stats-job 100`
 
 	opts, err := docopt.ParseArgs(usage, argv[1:], "version")
 	if err != nil {
@@ -25,7 +24,7 @@ example:
 		return err
 	}
 
-	jobIDStr, err := opts.String("--job-id")
+	jobIDStr, err := opts.String("<job-id>")
 	if err != nil {
 		return err
 	}
@@ -39,7 +38,7 @@ example:
 		return err
 	}
 
-	log.Infof("CmdStatsJob jobId=%v", jobID)
+	log.Debugf("CmdStatsJob jobId=%v", jobID)
 	s, err := c.StatsJob(jobID)
 	if err != nil {
 		return err
@@ -62,14 +61,13 @@ func printMap(s map[string]string) {
 }
 
 func CmdStatsTube(addr string, argv []string) error {
-	usage := `usage: stats-tube [--tube=<tube>]
+	usage := `usage: stats-tube <tube>
 options:
     -h, --help
-    --tube=<tube>   name of the tube [default: default]
 
 example:
-    retrieve statistics for a specific tube with name foobar
-    stats-tube --tube foobar`
+    retrieve statistics for the tube foobar
+    stats-tube  foobar`
 
 	opts, err := docopt.ParseArgs(usage, argv[1:], "version")
 	if err != nil {
@@ -77,7 +75,7 @@ example:
 		return err
 	}
 
-	tube, err := opts.String("--tube")
+	tube, err := opts.String("<tube>")
 	if err != nil {
 		return err
 	}
@@ -86,6 +84,7 @@ example:
 	if err != nil {
 		return err
 	}
+	defer c.Close()
 
 	log.Infof("StatsTube tube=%s", tube)
 	t := beanstalk.Tube{Conn: c, Name: tube}

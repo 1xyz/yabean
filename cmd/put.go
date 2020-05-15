@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/beanstalkd/go-beanstalk"
 	"github.com/docopt/docopt-go"
 	log "github.com/sirupsen/logrus"
@@ -53,7 +54,7 @@ example:
 		return err
 	}
 
-	log.Infof("c.Put() body=%v, pri=%v, delay=%v sec, ttr=%v sec tube=%v",
+	log.Debugf("c.Put() body=%v, pri=%v, delay=%v sec, ttr=%v sec tube=%v",
 		body, pri, ttr, delay, tube)
 
 	c, err := newConn(addr)
@@ -68,7 +69,6 @@ example:
 
 	var id uint64
 	if t == nil {
-		// t == nil; indicates no specific tube is used the put call is made to the default tube (implicitly)
 		id, err = c.Put([]byte(body), uint32(pri), time.Duration(delay)*time.Second, time.Duration(ttr)*time.Second)
 	} else {
 		id, err = t.Put([]byte(body), uint32(pri), time.Duration(delay)*time.Second, time.Duration(ttr)*time.Second)
@@ -79,6 +79,6 @@ example:
 		return err
 	}
 
-	log.Infof("c.Put() returned id = %v", id)
+	fmt.Printf("c.Put() returned id = %v\n", id)
 	return nil
 }
